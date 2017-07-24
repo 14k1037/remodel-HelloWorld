@@ -97,7 +97,7 @@ public class HelloWorldActivity extends Activity {
             pitchView.setText("pitch = "+pitch);
             yawView.setText("yaw = "+yaw);
 
-            //四元ベクトルデータ
+            //四元ベクトルデータ 多分 rotation.w()は受信機とMyoの距離ベクトル
             Q_x.setText("x = "+rotation.x());
             Q_y.setText("y = "+rotation.y());
             Q_z.setText("z = "+rotation.z());
