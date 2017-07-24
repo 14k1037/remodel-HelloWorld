@@ -44,6 +44,7 @@ public class HelloWorldActivity extends Activity {
         public void onConnect(Myo myo, long timestamp) {
             // Set the text color of the text view to cyan when a Myo connects.
             mTextView.setTextColor(Color.CYAN);
+            mTextView.setText(R.string.sync);
         }
 
         // onDisconnect() is called whenever a Myo has been disconnected.
@@ -51,6 +52,7 @@ public class HelloWorldActivity extends Activity {
         public void onDisconnect(Myo myo, long timestamp) {
             // Set the text color of the text view to red when a Myo disconnects.
             mTextView.setTextColor(Color.RED);
+            mTextView.setText(R.string.unsync);
         }
 
         // onArmSync() is called whenever Myo has recognized a Sync Gesture after someone has put it on their
@@ -97,7 +99,7 @@ public class HelloWorldActivity extends Activity {
             pitchView.setText("pitch = "+pitch);
             yawView.setText("yaw = "+yaw);
 
-            //四元ベクトルデータ 多分 rotation.w()は受信機とMyoの距離ベクトル
+            //四元ベクトルデータ
             Q_x.setText("x = "+rotation.x());
             Q_y.setText("y = "+rotation.y());
             Q_z.setText("z = "+rotation.z());

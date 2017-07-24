@@ -88,12 +88,14 @@ public final class R {
         public static final int pose_waveout=0x7f060016;
         public static final int roll=0x7f060017;
         public static final int scan=0x7f060018;
-        public static final int unlocked=0x7f060019;
-        public static final int w=0x7f06001a;
-        public static final int x=0x7f06001b;
-        public static final int y=0x7f06001c;
-        public static final int yaw=0x7f06001d;
-        public static final int z=0x7f06001e;
+        public static final int sync=0x7f060019;
+        public static final int unlocked=0x7f06001a;
+        public static final int unsync=0x7f06001b;
+        public static final int w=0x7f06001c;
+        public static final int x=0x7f06001d;
+        public static final int y=0x7f06001e;
+        public static final int yaw=0x7f06001f;
+        public static final int z=0x7f060020;
     }
     public static final class style {
         public static final int myosdk__PopupActivityTheme=0x7f070000;

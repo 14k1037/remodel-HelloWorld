@@ -41,7 +41,9 @@
     <string name="pose_waveout">Wave Out</string>
     <string name="roll">roll</string>
     <string name="scan">Scan</string>
+    <string name="sync">Myo is sync!</string>
     <string name="unlocked">Unlocked</string>
+    <string name="unsync">Myo is unsync!</string>
     <string name="w">w</string>
     <string name="x">x</string>
     <string name="y">y</string>

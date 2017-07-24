@@ -14,6 +14,9 @@
     <string name="unlocked">Unlocked</string>
     <string name="locked">Locked</string>
 
+    <string name="sync">Myo is sync!</string>
+    <string name="unsync">Myo is unsync!</string>
+
     <string name="roll">roll</string>
     <string name="pitch">pitch</string>
     <string name="yaw">yaw</string>
