@@ -68,18 +68,18 @@
             android:text="@string/roll" />
 
         <TextView
-            android:id="@+id/yaw"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/yaw" />
-
-        <TextView
             android:id="@+id/pitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/pitch" />
+
+        <TextView
+            android:id="@+id/yaw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/yaw" />
 
         <TextView
             android:id="@+id/AccelX"
