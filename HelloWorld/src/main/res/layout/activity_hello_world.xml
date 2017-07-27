@@ -8,14 +8,14 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/lock_state"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|center_horizontal"
+            android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:text="@string/locked"
@@ -25,103 +25,18 @@
         <TextView
             android:id="@+id/text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/hello_world"
             android:textSize="50dp"
             tools:ignore="SpUsage" />
 
-        <TextView
-            android:id="@+id/Q_x"
+        <ListView
+            android:id="@+id/items"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/x" />
-
-        <TextView
-            android:id="@+id/Q_y"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/y" />
-
-        <TextView
-            android:id="@+id/Q_z"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/z" />
-
-        <TextView
-            android:id="@+id/Q_w"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/w" />
-
-        <TextView
-            android:id="@+id/roll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/roll" />
-
-        <TextView
-            android:id="@+id/pitch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/pitch" />
-
-        <TextView
-            android:id="@+id/yaw"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/yaw" />
-
-        <TextView
-            android:id="@+id/AccelX"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/accelX" />
-
-        <TextView
-            android:id="@+id/AccelY"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/accelY" />
-
-        <TextView
-            android:id="@+id/AccelZ"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/GyroX"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/gyroX" />
-
-        <TextView
-            android:id="@+id/GyroY"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/gyroY" />
-
-        <TextView
-            android:id="@+id/GyroZ"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/gyroZ" />
+            android:entries="@array/ItemList" />
 
     </LinearLayout>
 

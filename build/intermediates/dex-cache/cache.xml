@@ -2,6 +2,13 @@
 <items version="2" >
 
     <item
+        jar="C:\Users\Naoki\.gradle\caches\modules-2\files-2.1\com.github.PhilJay\MPAndroidChart\v3.0.0-beta1\54d65d51b5ebec588a19b2384efb6395b5bf5b18\MPAndroidChart-v3.0.0-beta1.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="54d65d51b5ebec588a19b2384efb6395b5bf5b18">
+        <dex dex="C:\Users\Naoki\Downloads\Myo\myo-android-sdk-0.10.0\myo-android-sdk-0.10.0\samples\HelloWorld\build\intermediates\pre-dexed\debug\MPAndroidChart-v3.0.0-beta1-d40d615bb1287dc1e59ce6634bc460423c67bc83.jar" />
+    </item>
+    <item
         jar="C:\Users\Naoki\Downloads\Myo\myo-android-sdk-0.10.0\myo-android-sdk-0.10.0\samples\HelloWorld\build\intermediates\exploded-aar\com.thalmic\myosdk\0.10.0\classes.jar"
         jumboMode="false"
         revision="19.1.0"

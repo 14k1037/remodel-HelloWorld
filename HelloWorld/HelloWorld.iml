@@ -73,6 +73,7 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 18 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="MPAndroidChart-v3.0.0-beta1" level="project" />
     <orderEntry type="library" exported="" name="myosdk-0.10.0" level="project" />
   </component>
 </module>

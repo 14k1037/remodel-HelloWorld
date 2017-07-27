@@ -12,9 +12,18 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.thalmic.myo.AbstractDeviceListener;
 import com.thalmic.myo.Arm;
 import com.thalmic.myo.DeviceListener;
@@ -26,7 +35,7 @@ import com.thalmic.myo.Vector3;
 import com.thalmic.myo.XDirection;
 import com.thalmic.myo.scanner.ScanActivity;
 
-public class HelloWorldActivity extends Activity {
+public class HelloWorldActivity extends Activity implements AdapterView.OnItemClickListener {
 
     private TextView mLockStateView;
     private TextView mTextView;
@@ -34,6 +43,15 @@ public class HelloWorldActivity extends Activity {
     private TextView accelX, accelY, accelZ;
     private TextView gyroX, gyroY, gyroZ;
     private TextView Q_x, Q_y, Q_z, Q_w;
+
+    int isGraph = -1;
+    private ListView itemList;
+    String[] names = new String[]{"x-value", "y-value", "z-value", "w-value"};
+    int[] colors = new int[]{Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA};
+    private Button preview;
+
+
+    LineChart mChart;
 
     // Classes that inherit from AbstractDeviceListener can be used to receive events from Myo devices.
     // If you do not override an event, the default behavior is to do nothing.
@@ -45,6 +63,7 @@ public class HelloWorldActivity extends Activity {
             // Set the text color of the text view to cyan when a Myo connects.
             mTextView.setTextColor(Color.CYAN);
             mTextView.setText(R.string.sync);
+            itemList.setEnabled(true);
         }
 
         // onDisconnect() is called whenever a Myo has been disconnected.
@@ -53,6 +72,7 @@ public class HelloWorldActivity extends Activity {
             // Set the text color of the text view to red when a Myo disconnects.
             mTextView.setTextColor(Color.RED);
             mTextView.setText(R.string.unsync);
+            itemList.setEnabled(false);
         }
 
         // onArmSync() is called whenever Myo has recognized a Sync Gesture after someone has put it on their
@@ -95,15 +115,15 @@ public class HelloWorldActivity extends Activity {
 
             //Quaternion.roll(rotation)だとラジアンが表示される
             //Math.toDegreesを使って角度表記に変更する
-            rollText.setText("roll = "+roll);
-            pitchView.setText("pitch = "+pitch);
-            yawView.setText("yaw = "+yaw);
+            //rollText.setText("roll = "+roll);
+            //pitchView.setText("pitch = "+pitch);
+            //yawView.setText("yaw = "+yaw);
 
             //四元ベクトルデータ
-            Q_x.setText("x = "+rotation.x());
-            Q_y.setText("y = "+rotation.y());
-            Q_z.setText("z = "+rotation.z());
-            Q_w.setText("w = "+rotation.w());
+            //Q_x.setText("x = "+rotation.x());
+            //Q_y.setText("y = "+rotation.y());
+            //Q_z.setText("z = "+rotation.z());
+            //Q_w.setText("w = "+rotation.w());
 
             // Adjust roll and pitch for the orientation of the Myo on the arm.
             if (myo.getXDirection() == XDirection.TOWARD_ELBOW) {
@@ -115,23 +135,102 @@ public class HelloWorldActivity extends Activity {
             //mTextView.setRotation(roll);
             //mTextView.setRotationX(pitch);
             //mTextView.setRotationY(yaw);
+
+            if (isGraph == 0) {
+                float[] values = {(float)rotation.x(), (float)rotation.y(), (float)rotation.z(), (float)rotation.w()};
+                LineData data = mChart.getLineData();
+                if (data != null) {
+                    for (int i = 0; i < 4; i++) { // 3軸なのでそれぞれ処理します
+                        ILineDataSet set = data.getDataSetByIndex(i);
+                        if (set == null) {
+                            set = createSet(names[i], colors[i]); // ILineDataSetの初期化は別メソッドにまとめました
+                            data.addDataSet(set);
+                        }
+
+                        data.addEntry(new Entry(set.getEntryCount(), values[i]), i); // 実際にデータを追加する
+                        data.notifyDataChanged();
+                    }
+
+                    mChart.notifyDataSetChanged(); // 表示の更新のために変更を通知する
+                    mChart.setVisibleXRangeMaximum(50); // 表示の幅を決定する
+                    mChart.moveViewToX(data.getEntryCount()); // 最新のデータまで表示を移動させる
+                }
+            }
+            else if (isGraph == 1) {
+                float[] values = {(float)Math.toDegrees(Quaternion.roll(rotation)), (float)Math.toDegrees(Quaternion.pitch(rotation)), (float)Math.toDegrees(Quaternion.yaw(rotation))};
+                LineData data = mChart.getLineData();
+                if (data != null) {
+                    for (int i = 0; i < 3; i++) { // 3軸なのでそれぞれ処理します
+                        ILineDataSet set = data.getDataSetByIndex(i);
+                        if (set == null) {
+                            set = createSet(names[i], colors[i]); // ILineDataSetの初期化は別メソッドにまとめました
+                            data.addDataSet(set);
+                        }
+
+                        data.addEntry(new Entry(set.getEntryCount(), values[i]), i); // 実際にデータを追加する
+                        data.notifyDataChanged();
+                    }
+
+                    mChart.notifyDataSetChanged(); // 表示の更新のために変更を通知する
+                    mChart.setVisibleXRangeMaximum(50); // 表示の幅を決定する
+                    mChart.moveViewToX(data.getEntryCount()); // 最新のデータまで表示を移動させる
+                }
+            }
         }
 
         // onAccelerometerData() is called when an attached Myo has provided new accelerometer data
         //単位は g (1G = 9.80665 m/s^2)
         @Override
         public void onAccelerometerData(Myo myo, long timestamp, Vector3 accel) {
-            accelX.setText("Accel-X = " + accel.x());
-            accelY.setText("Accel-Y = " + accel.y());
-            accelZ.setText("Accel-Z = " + accel.z());
+            if (isGraph == 2) {
+                float[] values = {(float)accel.x(), (float)accel.y(), (float)accel.z()};
+                LineData data = mChart.getLineData();
+                if (data != null) {
+                    for (int i = 0; i < 3; i++) { // 3軸なのでそれぞれ処理します
+                        ILineDataSet set = data.getDataSetByIndex(i);
+                        if (set == null) {
+                            set = createSet(names[i], colors[i]); // ILineDataSetの初期化は別メソッドにまとめました
+                            data.addDataSet(set);
+                        }
+
+                        data.addEntry(new Entry(set.getEntryCount(), values[i]), i); // 実際にデータを追加する
+                        data.notifyDataChanged();
+                    }
+
+                    mChart.notifyDataSetChanged(); // 表示の更新のために変更を通知する
+                    mChart.setVisibleXRangeMaximum(50); // 表示の幅を決定する
+                    mChart.moveViewToX(data.getEntryCount()); // 最新のデータまで表示を移動させる
+                }
+            }
         }
 
         // onGyroscopeData() is called when an attached Myo has provided new gyroscope data
         @Override
         public void onGyroscopeData(Myo myo, long timestamp, Vector3 gyro) {
-            gyroX.setText("Gyro-X = " + gyro.x());
-            gyroY.setText("Gyro-X = " + gyro.y());
-            gyroZ.setText("Gyro-X = " + gyro.z());
+            //gyroX.setText("Gyro-X = " + gyro.x());
+            //gyroY.setText("Gyro-X = " + gyro.y());
+            //gyroZ.setText("Gyro-X = " + gyro.z());
+
+            if (isGraph == 3) {
+                float[] values = {(float)gyro.x(), (float)gyro.y(), (float)gyro.z()};
+                LineData data = mChart.getLineData();
+                if (data != null) {
+                    for (int i = 0; i < 3; i++) { // 3軸なのでそれぞれ処理します
+                        ILineDataSet set = data.getDataSetByIndex(i);
+                        if (set == null) {
+                            set = createSet(names[i], colors[i]); // ILineDataSetの初期化は別メソッドにまとめました
+                            data.addDataSet(set);
+                        }
+
+                        data.addEntry(new Entry(set.getEntryCount(), values[i]), i); // 実際にデータを追加する
+                        data.notifyDataChanged();
+                    }
+
+                    mChart.notifyDataSetChanged(); // 表示の更新のために変更を通知する
+                    mChart.setVisibleXRangeMaximum(50); // 表示の幅を決定する
+                    mChart.moveViewToX(data.getEntryCount()); // 最新のデータまで表示を移動させる
+                }
+            }
         }
 
         // onPose() is called whenever a Myo provides a new pose.
@@ -194,6 +293,7 @@ public class HelloWorldActivity extends Activity {
         mLockStateView = (TextView) findViewById(R.id.lock_state);
         mTextView = (TextView) findViewById(R.id.text);
 
+        /*
         rollText = (TextView) findViewById(R.id.roll);
         pitchView = (TextView) findViewById(R.id.pitch);
         yawView = (TextView) findViewById(R.id.yaw);
@@ -210,6 +310,11 @@ public class HelloWorldActivity extends Activity {
         Q_y = (TextView) findViewById(R.id.Q_y);
         Q_z = (TextView) findViewById(R.id.Q_z);
         Q_w = (TextView) findViewById(R.id.Q_w);
+        */
+
+        itemList = (ListView)findViewById(R.id.items);
+        itemList.setOnItemClickListener(this);
+        itemList.setEnabled(false);
 
         // First, we initialize the Hub singleton with an application identifier.
         Hub hub = Hub.getInstance();
@@ -258,5 +363,39 @@ public class HelloWorldActivity extends Activity {
         // Launch the ScanActivity to scan for Myos to connect to.
         Intent intent = new Intent(this, ScanActivity.class);
         startActivity(intent);
+    }
+
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        setContentView(R.layout.activity_show_data);
+        isGraph = position;
+        preview = (Button) findViewById(R.id.preview);
+        preview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setScreenMain();
+            }
+        });
+        mChart = (LineChart) findViewById(R.id.lineChart);
+        mChart.setDescription(""); // 表のタイトルを空にする
+        mChart.setData(new LineData()); // 空のLineData型インスタンスを追加
+    }
+
+    private LineDataSet createSet(String label, int color) {
+        LineDataSet set = new LineDataSet(null, label);
+        set.setLineWidth(2.5f); // 線の幅を指定
+        set.setColor(color); // 線の色を指定
+        set.setDrawCircles(false); // ポイントごとの円を表示しない
+        set.setDrawValues(false); // 値を表示しない
+
+        return set;
+    }
+
+    private void setScreenMain() {
+        setContentView(R.layout.activity_hello_world);
+        isGraph = -1;
+        itemList = (ListView)findViewById(R.id.items);
+        itemList.setOnItemClickListener(this);
     }
 }

@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- From: file:/C:/Users/Naoki/Downloads/Myo/myo-android-sdk-0.10.0/myo-android-sdk-0.10.0/samples/HelloWorld/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string-array name="ItemList">
+        <item>Quaternion</item>
+        <item>Orientation</item>
+        <item>Accelerometer</item>
+        <item>Gyroscope</item>
+    </string-array>
     <!-- From: file:/C:/Users/Naoki/Downloads/Myo/myo-android-sdk-0.10.0/myo-android-sdk-0.10.0/samples/HelloWorld/build/intermediates/exploded-aar/com.thalmic/myosdk/0.10.0/res/values/values.xml -->
     <eat-comment/>
     <color name="myosdk__button_orange">#FF8000</color>

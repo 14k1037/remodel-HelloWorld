@@ -31,4 +31,11 @@
     <string name="gyroY">gyro-Y</string>
     <string name="gyroZ">gyro-Z</string>
 
+    <string-array name="ItemList">
+        <item>Quaternion</item>
+        <item>Orientation</item>
+        <item>Accelerometer</item>
+        <item>Gyroscope</item>
+    </string-array>
+
 </resources>
