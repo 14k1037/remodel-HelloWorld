@@ -39,19 +39,17 @@ public class HelloWorldActivity extends Activity implements AdapterView.OnItemCl
 
     private TextView mLockStateView;
     private TextView mTextView;
-    private TextView rollText, pitchView, yawView;
-    private TextView accelX, accelY, accelZ;
-    private TextView gyroX, gyroY, gyroZ;
-    private TextView Q_x, Q_y, Q_z, Q_w;
 
+    //どのデータを閲覧しているか(待機状態 = -1, Quaternion = 0, Orientation = 1, Accelerometer = 2, Gyroscope = 3)
     int isGraph = -1;
+    //データのグラフ表示に必要な関数
     private ListView itemList;
-    String[] names = new String[]{"x-value", "y-value", "z-value", "w-value"};
+    String[] names = new String[]{"x-value or roll", "y-value or pitch", "z-value or yaw", "w-value"};
     int[] colors = new int[]{Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA};
-    private Button preview;
-
-
     LineChart mChart;
+
+    //リターンボタン
+    private Button preview;
 
     // Classes that inherit from AbstractDeviceListener can be used to receive events from Myo devices.
     // If you do not override an event, the default behavior is to do nothing.
@@ -108,33 +106,8 @@ public class HelloWorldActivity extends Activity implements AdapterView.OnItemCl
         // represented as a quaternion.
         @Override
         public void onOrientationData(Myo myo, long timestamp, Quaternion rotation) {
-            // Calculate Euler angles (roll, pitch, and yaw) from the quaternion.
-            float roll = (float) Math.toDegrees(Quaternion.roll(rotation));
-            float pitch = (float) Math.toDegrees(Quaternion.pitch(rotation));
-            float yaw = (float) Math.toDegrees(Quaternion.yaw(rotation));
-
             //Quaternion.roll(rotation)だとラジアンが表示される
             //Math.toDegreesを使って角度表記に変更する
-            //rollText.setText("roll = "+roll);
-            //pitchView.setText("pitch = "+pitch);
-            //yawView.setText("yaw = "+yaw);
-
-            //四元ベクトルデータ
-            //Q_x.setText("x = "+rotation.x());
-            //Q_y.setText("y = "+rotation.y());
-            //Q_z.setText("z = "+rotation.z());
-            //Q_w.setText("w = "+rotation.w());
-
-            // Adjust roll and pitch for the orientation of the Myo on the arm.
-            if (myo.getXDirection() == XDirection.TOWARD_ELBOW) {
-                roll *= -1;
-                pitch *= -1;
-            }
-
-            // Next, we apply a rotation to the text view using the roll, pitch, and yaw.
-            //mTextView.setRotation(roll);
-            //mTextView.setRotationX(pitch);
-            //mTextView.setRotationY(yaw);
 
             if (isGraph == 0) {
                 float[] values = {(float)rotation.x(), (float)rotation.y(), (float)rotation.z(), (float)rotation.w()};
@@ -207,10 +180,6 @@ public class HelloWorldActivity extends Activity implements AdapterView.OnItemCl
         // onGyroscopeData() is called when an attached Myo has provided new gyroscope data
         @Override
         public void onGyroscopeData(Myo myo, long timestamp, Vector3 gyro) {
-            //gyroX.setText("Gyro-X = " + gyro.x());
-            //gyroY.setText("Gyro-X = " + gyro.y());
-            //gyroZ.setText("Gyro-X = " + gyro.z());
-
             if (isGraph == 3) {
                 float[] values = {(float)gyro.x(), (float)gyro.y(), (float)gyro.z()};
                 LineData data = mChart.getLineData();
@@ -293,25 +262,6 @@ public class HelloWorldActivity extends Activity implements AdapterView.OnItemCl
         mLockStateView = (TextView) findViewById(R.id.lock_state);
         mTextView = (TextView) findViewById(R.id.text);
 
-        /*
-        rollText = (TextView) findViewById(R.id.roll);
-        pitchView = (TextView) findViewById(R.id.pitch);
-        yawView = (TextView) findViewById(R.id.yaw);
-
-        accelX = (TextView) findViewById(R.id.AccelX);
-        accelY = (TextView) findViewById(R.id.AccelY);
-        accelZ = (TextView) findViewById(R.id.AccelZ);
-
-        gyroX = (TextView) findViewById(R.id.GyroX);
-        gyroY = (TextView) findViewById(R.id.GyroY);
-        gyroZ = (TextView) findViewById(R.id.GyroZ);
-
-        Q_x = (TextView) findViewById(R.id.Q_x);
-        Q_y = (TextView) findViewById(R.id.Q_y);
-        Q_z = (TextView) findViewById(R.id.Q_z);
-        Q_w = (TextView) findViewById(R.id.Q_w);
-        */
-
         itemList = (ListView)findViewById(R.id.items);
         itemList.setOnItemClickListener(this);
         itemList.setEnabled(false);
@@ -366,6 +316,7 @@ public class HelloWorldActivity extends Activity implements AdapterView.OnItemCl
     }
 
 
+    //グラフ描画の準備用メソッド
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         setContentView(R.layout.activity_show_data);
@@ -378,10 +329,25 @@ public class HelloWorldActivity extends Activity implements AdapterView.OnItemCl
             }
         });
         mChart = (LineChart) findViewById(R.id.lineChart);
-        mChart.setDescription(""); // 表のタイトルを空にする
+        mChart.setBackgroundColor(Color.WHITE);
+        switch(isGraph) {
+            case 0:
+                mChart.setDescription("Quaternion"); // 表のタイトル
+                break;
+            case 1:
+                mChart.setDescription("Orientation");
+                break;
+            case 2:
+                mChart.setDescription("Accelerometer");
+                break;
+            case 3:
+                mChart.setDescription("Gyroscope");
+                break;
+        }
         mChart.setData(new LineData()); // 空のLineData型インスタンスを追加
     }
 
+    //グラフの諸設定
     private LineDataSet createSet(String label, int color) {
         LineDataSet set = new LineDataSet(null, label);
         set.setLineWidth(2.5f); // 線の幅を指定
@@ -392,10 +358,15 @@ public class HelloWorldActivity extends Activity implements AdapterView.OnItemCl
         return set;
     }
 
+    //Returnボタンが押されたとき用メソッド
     private void setScreenMain() {
         setContentView(R.layout.activity_hello_world);
         isGraph = -1;
         itemList = (ListView)findViewById(R.id.items);
         itemList.setOnItemClickListener(this);
+        mLockStateView = (TextView) findViewById(R.id.lock_state);
+        mTextView = (TextView) findViewById(R.id.text);
+        mTextView.setTextColor(Color.CYAN);
+        mTextView.setText(R.string.sync);
     }
 }

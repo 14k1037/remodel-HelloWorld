@@ -21,5 +21,6 @@ dependencies {
     }
     
     compile 'com.thalmic:myosdk:0.10.0@aar'
+    //グラフ描画用API
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.0-beta1'
 }
